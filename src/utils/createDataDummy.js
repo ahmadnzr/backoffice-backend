@@ -6,12 +6,15 @@ faker.locale = "id_ID";
 exports.createRandomUser = () => {
   const r = Math.ceil(Math.random() * 2);
   const sex = r > 1 ? "male" : "female";
-  const firstname = faker.name.firstName(sex);
-  const lastname = faker.name.lastName(sex);
+  const fullname = faker.name.fullName();
+  const firstname = fullname.split(" ")[0];
+  const lastname = fullname.split(" ")[1];
 
   const user = {
     _id: uuidv4(),
-    email: faker.internet.email(firstname, lastname),
+    email: faker.internet
+      .email(firstname, lastname, "gmail.com")
+      .toLocaleLowerCase(),
     doc_type: r > 1 ? "KTP" : "SIM",
     name: {
       first: firstname,
@@ -20,7 +23,7 @@ exports.createRandomUser = () => {
     birth_place: faker.address.cityName(),
     birth_date: new Date(faker.date.birthdate()).getTime(),
     sex,
-    password: faker.internet.password(),
+    password: firstname.toLocaleLowerCase(),
     address: `${faker.address.streetAddress()}, ${faker.address.streetName()}`,
     phone_number: { code: "ID", value: faker.phone.number("62###########") },
   };
