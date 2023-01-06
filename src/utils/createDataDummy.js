@@ -27,3 +27,14 @@ exports.createRandomUser = () => {
 
   return user;
 };
+
+exports.createRandomAdmin = () => {
+  const fullname = faker.name.fullName();
+  const username = fullname.split(" ")[0].toLowerCase();
+  return {
+    _id: uuidv4(),
+    username: username,
+    password: username,
+    fullname,
+  };
+};

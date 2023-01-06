@@ -1,6 +1,10 @@
 const userService = require("../services/userService");
+const adminService = require("../services/adminService");
 const asyncWrapper = require("../middleware/asycnWrapper");
-const { createRandomUser } = require("../utils/createRandomUser");
+const {
+  createRandomUser,
+  createRandomAdmin,
+} = require("../utils/createDataDummy");
 
 exports.getAllUser = asyncWrapper(async (req, res) => {
   const users = await userService.getAllUser();
@@ -17,7 +21,9 @@ exports.createRandomUser = asyncWrapper(async (req, res) => {
 });
 
 exports.createUser = asyncWrapper(async (req, res) => {
-  const user = createRandomUser();
+  const admin = createRandomAdmin();
 
-  return res.json(user);
+  await adminService.createAdmin(admin);
+
+  return res.json(admin);
 });
