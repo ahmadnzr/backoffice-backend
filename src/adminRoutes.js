@@ -6,5 +6,6 @@ const adminController = require("./controllers/adminController");
 router.post("/login", adminController.loginAdmin);
 router.post("/createRandomUser", adminController.createRandomUser);
 router.get("/users", adminController.getAllUser);
+router.get("/users/:userId", adminController.getUserById);
 
 module.exports = router;

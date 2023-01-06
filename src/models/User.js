@@ -6,6 +6,7 @@ const userSchema = new Schema({
   _id: String,
   email: String,
   doc_type: String,
+  doc_number: Number,
   name: {
     first: String,
     last: String,

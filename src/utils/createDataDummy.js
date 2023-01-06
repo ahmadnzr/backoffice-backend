@@ -16,6 +16,7 @@ exports.createRandomUser = () => {
       .email(firstname, lastname, "gmail.com")
       .toLocaleLowerCase(),
     doc_type: r > 1 ? "KTP" : "SIM",
+    doc_number: faker.phone.number("################"),
     name: {
       first: firstname,
       last: lastname,
