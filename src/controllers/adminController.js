@@ -44,10 +44,26 @@ exports.getUserById = asyncWrapper(async (req, res) => {
 
   if (!userId || !user) {
     return res.status(404).json({
-      status: "user not found",
+      message: "user not found",
     });
   }
   const usersView = createUserDetailView(user);
 
   return res.status(200).json({ user: usersView });
+});
+
+exports.deleteByUserId = asyncWrapper(async (req, res) => {
+  const { userId } = req.params;
+  const user = await userService.getUserById(userId);
+
+  if (!userId || !user) {
+    return res.status(404).json({
+      message: "user not found",
+    });
+  }
+  await userService.deleteByUserId(userId);
+
+  return res.status(200).json({
+    message: "user deleted!",
+  });
 });

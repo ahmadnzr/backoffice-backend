@@ -11,3 +11,7 @@ exports.createUser = async (user) => {
 exports.getUserById = async (userId) => {
   return await UserModel.findById(userId);
 };
+
+exports.deleteByUserId = async (userId) => {
+  return await UserModel.deleteOne({ _id: userId });
+};
