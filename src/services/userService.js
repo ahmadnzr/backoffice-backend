@@ -15,3 +15,11 @@ exports.getUserById = async (userId) => {
 exports.deleteByUserId = async (userId) => {
   return await UserModel.deleteOne({ _id: userId });
 };
+
+exports.updateByUserId = async (user, userId) => {
+  return await UserModel.updateOne({ _id: userId }, user);
+};
+
+exports.getUserByEmail = async (email) => {
+  return await UserModel.findOne({ email });
+};
