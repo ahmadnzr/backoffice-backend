@@ -1,7 +1,7 @@
 const UserModel = require("../models/User");
 
 exports.getAllUser = async () => {
-  return await UserModel.find();
+  return await UserModel.find().sort({ created_at: "desc" });
 };
 
 exports.createUser = async (user) => {

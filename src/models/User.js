@@ -18,6 +18,7 @@ const userSchema = new Schema({
   password: String,
   phone_number: { code: String, value: Number },
   verified_email: { type: Boolean, default: false },
+  created_at: { type: Date, default: new Date() },
 });
 
 module.exports = mongoose.model("User", userSchema);

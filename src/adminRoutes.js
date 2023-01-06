@@ -7,6 +7,7 @@ router.post("/login", adminController.loginAdmin);
 
 router.post("/createRandomUser", adminController.createRandomUser);
 router.get("/users", adminController.getAllUser);
+router.post("/users", adminController.createUser);
 router.get("/users/:userId", adminController.getUserById);
 router.delete("/users/:userId", adminController.deleteByUserId);
 

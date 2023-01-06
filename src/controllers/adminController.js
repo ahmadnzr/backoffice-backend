@@ -3,6 +3,7 @@ const adminService = require("../services/adminService");
 const userService = require("../services/userService");
 const { createRandomUser } = require("../utils/createDataDummy");
 const { createUsersView, createUserDetailView } = require("../views/UserView");
+const { v4: uuidv4 } = require("uuid");
 
 exports.loginAdmin = asyncWrapper(async (req, res) => {
   const { username, password } = req.body;
@@ -24,6 +25,48 @@ exports.loginAdmin = asyncWrapper(async (req, res) => {
 
 exports.createRandomUser = asyncWrapper(async (req, res) => {
   const user = createRandomUser();
+  await userService.createUser(user);
+
+  return res.status(201).json({
+    message: "user created!",
+  });
+});
+
+exports.createUser = asyncWrapper(async (req, res) => {
+  const {
+    email,
+    doc_type,
+    doc_number,
+    firstname,
+    lastname,
+    birth_place,
+    birth_date,
+    address,
+    sex,
+    password,
+    phone_number,
+  } = req.body;
+
+  if (!email) {
+    return res.status(400).json({
+      message: "field required!",
+    });
+  }
+
+  const user = {
+    _id: uuidv4(),
+    email,
+    doc_type: doc_type.toLowerCase(),
+    doc_number,
+    name: { first: firstname, last: lastname },
+    birth_place,
+    birth_date,
+    sex: sex.toLowerCase(),
+    password,
+    address,
+    phone_number: { code: "ID", value: phone_number },
+  };
+
   await userService.createUser(user);
 
   return res.status(201).json({
