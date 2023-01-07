@@ -7,3 +7,7 @@ exports.createUserPin = async (pin) => {
 exports.findPinWithUserId = async (userId) => {
   return await PinModel.findOne({ userId });
 };
+
+exports.updateUserPin = async (pin, userId) => {
+  return await PinModel.updateOne({ userId }, { pin: parseInt(pin) });
+};

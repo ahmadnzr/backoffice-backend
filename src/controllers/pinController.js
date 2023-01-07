@@ -13,7 +13,6 @@ exports.createUserPin = asyncWrapper(async (req, res) => {
     return res.status(400).json({
       status: "failed",
       message: "invalid userId or pin",
-      userid,
     });
   }
 
@@ -36,5 +35,30 @@ exports.createUserPin = asyncWrapper(async (req, res) => {
   return res.status(201).json({
     status: "success",
     message: "pin created!",
+  });
+});
+
+exports.updateUserPin = asyncWrapper(async (req, res) => {
+  const { pin } = req.body;
+  const { userid } = req.headers;
+
+  const user = await userService.getUserById(userid);
+
+  if (!user) {
+    return res.status(404).json({
+      message: "user not found",
+    });
+  }
+
+  if (!pin) {
+    return res.status(404).json({
+      message: "new pin required",
+    });
+  }
+
+  await pinService.updateUserPin(pin, userid);
+  return res.status(200).json({
+    status: "success",
+    message: "pin updated!",
   });
 });
