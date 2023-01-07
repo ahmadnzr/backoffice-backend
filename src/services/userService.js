@@ -27,3 +27,7 @@ exports.getUserByEmail = async (email) => {
 exports.loginUser = async (email, password) => {
   return await UserModel.findOne({ email, password });
 };
+
+exports.updateUserPassword = async (password, userId) => {
+  return await UserModel.updateOne({ _id: userId }, { password });
+};

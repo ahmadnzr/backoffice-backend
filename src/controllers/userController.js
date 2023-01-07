@@ -89,3 +89,28 @@ exports.loginUser = asyncWrapper(async (req, res) => {
     user: { id: user._id, email: user.email, fullname },
   });
 });
+
+exports.updateUserPassword = asyncWrapper(async (req, res) => {
+  const { password } = req.body;
+  const { userid } = req.headers;
+
+  const user = await userService.getUserById(userid);
+
+  if (!user) {
+    return res.status(404).json({
+      message: "user not found",
+    });
+  }
+
+  if (!password) {
+    return res.status(404).json({
+      message: "new password required",
+    });
+  }
+
+  await userService.updateUserPassword(password, userid);
+  return res.status(200).json({
+    status: "succes",
+    message: "password updated!",
+  });
+});
