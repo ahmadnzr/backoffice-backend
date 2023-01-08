@@ -3,20 +3,22 @@ const { v4: uuidv4 } = require("uuid");
 const userService = require("../services/userService");
 const pinService = require("../services/pinService");
 const asyncWrapper = require("../middleware/asycnWrapper");
+const { verifyToken } = require("../middleware/checkAdminAuth");
 
 exports.createUserPin = asyncWrapper(async (req, res) => {
   const { pin } = req.body;
-  const { userid } = req.headers;
+  const { authorization } = req.headers;
 
-  const validUserId = await userService.getUserById(userid);
-  if (!validUserId || !pin) {
+  const user = verifyToken(authorization);
+
+  if (!user || !pin) {
     return res.status(400).json({
       status: "failed",
       message: "invalid userId or pin",
     });
   }
 
-  const alreadyHavePin = await pinService.findPinWithUserId(userid);
+  const alreadyHavePin = await pinService.findPinWithUserId(user.userId);
   if (alreadyHavePin) {
     return res.status(201).json({
       status: "failed",
@@ -27,7 +29,7 @@ exports.createUserPin = asyncWrapper(async (req, res) => {
   const userPin = {
     _id: uuidv4(),
     pin: parseInt(pin),
-    userId: userid,
+    userId: user.userId,
   };
 
   await pinService.createUserPin(userPin);
@@ -40,9 +42,9 @@ exports.createUserPin = asyncWrapper(async (req, res) => {
 
 exports.updateUserPin = asyncWrapper(async (req, res) => {
   const { pin } = req.body;
-  const { userid } = req.headers;
+  const { authorization } = req.headers;
 
-  const user = await userService.getUserById(userid);
+  const user = verifyToken(authorization);
 
   if (!user) {
     return res.status(404).json({
@@ -56,7 +58,7 @@ exports.updateUserPin = asyncWrapper(async (req, res) => {
     });
   }
 
-  await pinService.updateUserPin(pin, userid);
+  await pinService.updateUserPin(pin, user.userId);
   return res.status(200).json({
     status: "success",
     message: "pin updated!",

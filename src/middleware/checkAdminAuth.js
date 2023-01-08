@@ -5,7 +5,7 @@ const verifyToken = (authorization) => {
   return jwt.verify(token, process.env.JWT_SECRET_KEY);
 };
 
-const checkAdminAuth = (req, res, next) => {
+const checkAuth = (req, res, next) => {
   try {
     const { authorization } = req.headers;
 
@@ -17,4 +17,4 @@ const checkAdminAuth = (req, res, next) => {
   }
 };
 
-module.exports = { checkAdminAuth, verifyToken };
+module.exports = { checkAuth, verifyToken };

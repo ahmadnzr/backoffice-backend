@@ -1,9 +1,12 @@
+const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 
 const userService = require("../services/userService");
 const asyncWrapper = require("../middleware/asycnWrapper");
+const { verifyToken } = require("../middleware/checkAdminAuth");
 
 const OTP_CODE = process.env.OTP_CODE;
+const TOKEN_AGE = 60 * 60 * 24 * 5; // 5 day
 
 exports.otpVerification = asyncWrapper((req, res) => {
   const { otp_code } = req.body;
@@ -78,23 +81,28 @@ exports.loginUser = asyncWrapper(async (req, res) => {
   if (!user) {
     return res.status(400).json({
       status: "failed to login",
-      message: "username or password invalid",
+      message: "email or password invalid",
     });
   }
+
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: TOKEN_AGE,
+  });
 
   const fullname = user.name.first + " " + user.name.last;
 
   return res.json({
-    token: "randomToken2023",
+    accessToken: token,
+    expiresIn: TOKEN_AGE,
     user: { id: user._id, email: user.email, fullname },
   });
 });
 
 exports.updateUserPassword = asyncWrapper(async (req, res) => {
   const { password } = req.body;
-  const { userid } = req.headers;
+  const { authorization } = req.headers;
 
-  const user = await userService.getUserById(userid);
+  const user = verifyToken(authorization);
 
   if (!user) {
     return res.status(404).json({
@@ -108,7 +116,7 @@ exports.updateUserPassword = asyncWrapper(async (req, res) => {
     });
   }
 
-  await userService.updateUserPassword(password, userid);
+  await userService.updateUserPassword(password, user.userId);
   return res.status(200).json({
     status: "succes",
     message: "password updated!",
