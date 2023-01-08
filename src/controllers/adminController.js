@@ -1,6 +1,8 @@
+const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 
 const asyncWrapper = require("../middleware/asycnWrapper");
+const { verifyToken } = require("../middleware/checkAdminAuth");
 const adminService = require("../services/adminService");
 const userService = require("../services/userService");
 const { createRandomUser } = require("../utils/createDataDummy");
@@ -18,9 +20,25 @@ exports.loginAdmin = asyncWrapper(async (req, res) => {
     });
   }
 
+  const token = jwt.sign({ userId: admin._id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: "5d",
+  });
+
   return res.json({
-    token: "randomToken2022",
-    user: { id: admin._id, username: admin.username, fullname: admin.fullname },
+    accessToken: token,
+  });
+});
+
+exports.loggedUser = asyncWrapper(async (req, res) => {
+  const { authorization } = req.headers;
+  const loggedAdmin = verifyToken(authorization);
+
+  const user = await adminService.getAdminById(loggedAdmin.userId);
+
+  return res.status(200).json({
+    id: user._id,
+    username: user.username,
+    fullname: user.fullname,
   });
 });
 

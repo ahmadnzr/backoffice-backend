@@ -9,3 +9,7 @@ exports.loginAdmin = async (username, password) => {
 
   return admin;
 };
+
+exports.getAdminById = async (id) => {
+  return await AdminModel.findById(id);
+};
