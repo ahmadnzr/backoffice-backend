@@ -8,37 +8,28 @@ const userService = require("../services/userService");
 const { createRandomUser } = require("../utils/createDataDummy");
 const { createUsersView, createUserDetailView } = require("../views/UserView");
 
+const TOKEN_AGE = 60 * 60 * 24 * 5; // 5 day
+
 exports.loginAdmin = asyncWrapper(async (req, res) => {
   const { username, password } = req.body;
 
   const admin = await adminService.loginAdmin(username, password);
 
   if (!admin) {
-    return res.status(400).json({
+    return res.status(403).json({
       status: "failed to login",
       message: "username or password invalid",
     });
   }
 
   const token = jwt.sign({ userId: admin._id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: "5d",
+    expiresIn: TOKEN_AGE,
   });
 
   return res.json({
     accessToken: token,
-  });
-});
-
-exports.loggedUser = asyncWrapper(async (req, res) => {
-  const { authorization } = req.headers;
-  const loggedAdmin = verifyToken(authorization);
-
-  const user = await adminService.getAdminById(loggedAdmin.userId);
-
-  return res.status(200).json({
-    id: user._id,
-    username: user.username,
-    fullname: user.fullname,
+    expiresIn: TOKEN_AGE,
+    user: { id: admin._id, username: admin.username, fullname: admin.fullname },
   });
 });
 

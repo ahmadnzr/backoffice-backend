@@ -5,7 +5,6 @@ const { checkAdminAuth } = require("./middleware/checkAdminAuth");
 /** admin backoffice routes  */
 
 router.post("/login", adminController.loginAdmin);
-router.get("/profile", checkAdminAuth, adminController.loggedUser);
 
 router.post(
   "/createRandomUser",
