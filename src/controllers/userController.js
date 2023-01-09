@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 
 const userService = require("../services/userService");
+const pinService = require("../services/pinService");
 const asyncWrapper = require("../middleware/asycnWrapper");
 const { verifyToken } = require("../middleware/checkAdminAuth");
 
@@ -85,6 +86,8 @@ exports.loginUser = asyncWrapper(async (req, res) => {
     });
   }
 
+  const userPin = await pinService.findPinWithUserId(user._id);
+
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
     expiresIn: TOKEN_AGE,
   });
@@ -94,7 +97,12 @@ exports.loginUser = asyncWrapper(async (req, res) => {
   return res.json({
     accessToken: token,
     expiresIn: TOKEN_AGE,
-    user: { id: user._id, email: user.email, fullname },
+    user: {
+      id: user._id,
+      email: user.email,
+      fullname,
+      userPin: userPin ? true : false,
+    },
   });
 });
 
