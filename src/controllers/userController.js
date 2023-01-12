@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
+const dayjs = require("dayjs");
 
 const userService = require("../services/userService");
 const pinService = require("../services/pinService");
@@ -60,7 +61,7 @@ exports.createUser = asyncWrapper(async (req, res) => {
     doc_number,
     name: { first: firstname, last: lastname },
     birth_place,
-    birth_date,
+    birth_date: dayjs().format(birth_date),
     sex: sex.toLowerCase(),
     password,
     address,
