@@ -61,7 +61,7 @@ exports.createUser = asyncWrapper(async (req, res) => {
     doc_number,
     name: { first: firstname, last: lastname },
     birth_place,
-    birth_date: dayjs().format(birth_date),
+    birth_date: dayjs(birth_date).format("DD/MM/YYYY"),
     sex: sex.toLowerCase(),
     password,
     address,
