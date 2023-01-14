@@ -1,4 +1,5 @@
 const { faker } = require("@faker-js/faker");
+const dayjs = require("dayjs");
 const { v4: uuidv4 } = require("uuid");
 
 faker.locale = "id_ID";
@@ -9,6 +10,7 @@ exports.createRandomUser = () => {
   const fullname = faker.name.fullName();
   const firstname = fullname.split(" ")[0];
   const lastname = fullname.split(" ")[1];
+  const sevenYago = dayjs().subtract(17, "year").format();
 
   const user = {
     _id: uuidv4(),
@@ -17,16 +19,14 @@ exports.createRandomUser = () => {
       .toLocaleLowerCase(),
     doc_type: r > 1 ? "ktp" : "sim",
     doc_number: faker.phone.number("################"),
-    name: {
-      first: firstname,
-      last: lastname,
-    },
+    firstname,
+    lastname,
     birth_place: faker.address.cityName(),
-    birth_date: new Date(faker.date.birthdate()).getTime(),
+    birth_date: sevenYago,
     sex,
-    password: firstname.toLocaleLowerCase(),
-    address: `${faker.address.streetAddress()}, ${faker.address.streetName()}`,
-    phone_number: { code: "ID", value: faker.phone.number("62###########") },
+    password: faker.internet.password() + "#",
+    address: `${faker.address.street()}, ${faker.address.streetName()}`,
+    phone_number: { code: "ID", value: faker.phone.number("8###########") },
   };
 
   return user;

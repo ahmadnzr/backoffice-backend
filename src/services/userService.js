@@ -12,6 +12,15 @@ exports.getUserById = async (userId) => {
   return await UserModel.findById(userId);
 };
 
+exports.getUserByName = async (name) => {
+  return await UserModel.find({
+    $or: [
+      { firstname: { $regex: name, $options: "i" } },
+      { lastname: { $regex: name, $options: "i" } },
+    ],
+  });
+};
+
 exports.deleteByUserId = async (userId) => {
   return await UserModel.deleteOne({ _id: userId });
 };

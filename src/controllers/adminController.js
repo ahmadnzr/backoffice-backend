@@ -34,8 +34,12 @@ exports.loginAdmin = asyncWrapper(async (req, res) => {
 });
 
 exports.createRandomUser = asyncWrapper(async (req, res) => {
-  const user = createRandomUser();
-  await userService.createUser(user);
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map(
+    async (i) => {
+      const user = createRandomUser();
+      await userService.createUser(user);
+    }
+  );
 
   return res.status(201).json({
     message: "user created!",
@@ -75,7 +79,8 @@ exports.createUser = asyncWrapper(async (req, res) => {
     email,
     doc_type: doc_type.toLowerCase(),
     doc_number,
-    name: { first: firstname, last: lastname },
+    firstname,
+    lastname,
     birth_place,
     birth_date,
     sex: sex.toLowerCase(),
@@ -92,6 +97,14 @@ exports.createUser = asyncWrapper(async (req, res) => {
 });
 
 exports.getAllUser = asyncWrapper(async (req, res) => {
+  const { search } = req.query;
+
+  if (search) {
+    const users = await userService.getUserByName(search);
+    const usersView = users.map((user) => createUsersView(user));
+    return res.status(200).json({ users: usersView });
+  }
+
   const users = await userService.getAllUser();
   const usersView = users.map((user) => createUsersView(user));
 
@@ -169,7 +182,8 @@ exports.updateByUserId = asyncWrapper(async (req, res) => {
     email,
     doc_type: doc_type.toLowerCase(),
     doc_number,
-    name: { first: firstname, last: lastname },
+    firstname,
+    lastname,
     birth_place,
     birth_date,
     sex: sex.toLowerCase(),

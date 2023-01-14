@@ -7,10 +7,8 @@ const userSchema = new Schema({
   email: String,
   doc_type: String,
   doc_number: Number,
-  name: {
-    first: String,
-    last: String,
-  },
+  firstname: String,
+  lastname: String,
   birth_place: String,
   birth_date: String,
   address: String,

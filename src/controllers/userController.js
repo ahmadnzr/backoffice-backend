@@ -59,7 +59,8 @@ exports.createUser = asyncWrapper(async (req, res) => {
     email,
     doc_type: doc_type.toLowerCase(),
     doc_number,
-    name: { first: firstname, last: lastname },
+    firstname,
+    lastname,
     birth_place,
     birth_date: dayjs(birth_date).format("DD/MM/YYYY"),
     sex: sex.toLowerCase(),
@@ -93,7 +94,7 @@ exports.loginUser = asyncWrapper(async (req, res) => {
     expiresIn: TOKEN_AGE,
   });
 
-  const fullname = user.name.first + " " + user.name.last;
+  const fullname = user.firstname + " " + user.lastname;
 
   return res.json({
     accessToken: token,

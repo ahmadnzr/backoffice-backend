@@ -1,10 +1,10 @@
 const createUsersView = (user) => {
-  const { _id, name, email, doc_type } = user;
+  const { _id, firstname, lastname, email, doc_type } = user;
 
   return {
     id: _id,
-    firstname: name.first,
-    lastname: name.last,
+    firstname,
+    lastname,
     email,
     doc_type,
   };
@@ -13,7 +13,8 @@ const createUsersView = (user) => {
 const createUserDetailView = (user) => {
   const {
     _id,
-    name,
+    firstname,
+    lastname,
     phone_number,
     email,
     doc_type,
@@ -28,8 +29,8 @@ const createUserDetailView = (user) => {
 
   return {
     id: _id,
-    firstname: name.first,
-    lastname: name.last,
+    firstname,
+    lastname,
     phone_number: phone_number.value,
     email,
     doc_type,
