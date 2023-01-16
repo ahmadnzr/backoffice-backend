@@ -15,6 +15,7 @@ exports.transactionViewOnce = async (transaction) => {
     vr_account,
     created_at,
     updated_at,
+    expired_at,
   } = transaction;
 
   const target = await TransactionService.findTargetById(target_id);
@@ -32,6 +33,9 @@ exports.transactionViewOnce = async (transaction) => {
     nominal,
     status,
     admin_fee,
-    transaction_date: dayjs(created_at).format("DD MMMM YYYY HH:mm:ss"),
+    // transaction_date: dayjs(created_at).format("DD MMMM YYYY HH:mm:ss"),
+    transaction_date: created_at,
+    expired_at: expired_at,
+    isExpired: dayjs().isAfter(expired_at),
   };
 };

@@ -5,12 +5,13 @@ const TransactionService = require("../services/transactionService");
 const TransactionView = require("../views/TransactionView");
 
 const asyncWrapper = require("../middleware/asycnWrapper");
+const dayjs = require("dayjs");
 
 exports.createTransaction = async (req, res) => {
   const { nominal, bank_code, no_rekening, pin } = req.body;
   const user = req.user;
 
-  const bank = TransactionService.findBankByCode(bank_code);
+  const bank = await TransactionService.findBankByCode(bank_code);
   const target = await TransactionService.findTargetByNorek(no_rekening);
   const cPin = await TransactionService.checkUserPin(pin, user.userId);
 

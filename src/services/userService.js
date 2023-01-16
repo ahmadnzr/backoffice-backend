@@ -12,6 +12,10 @@ exports.getUserById = async (userId) => {
   return await UserModel.findById(userId);
 };
 
+exports.getUserByEmail = async (email) => {
+  return await UserModel.findOne({ email });
+};
+
 exports.getUserByName = async (name) => {
   return await UserModel.find({
     $or: [
