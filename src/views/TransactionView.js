@@ -1,6 +1,5 @@
 const dayjs = require("dayjs");
 const TransactionService = require("../services/transactionService");
-const UserService = require("../services/userService");
 
 exports.transactionViewOnce = async (transaction) => {
   const {
@@ -38,4 +37,13 @@ exports.transactionViewOnce = async (transaction) => {
     expired_at: expired_at,
     isExpired: dayjs().isAfter(expired_at),
   };
+};
+
+exports.transactionViewAll = async (arr, callback) => {
+  const result = [];
+
+  for await (let val of arr.map(callback)) {
+    result.push(val);
+  }
+  return result;
 };

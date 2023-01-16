@@ -67,3 +67,20 @@ exports.getTransactionById = asyncWrapper(async (req, res) => {
     ...trasactionView,
   });
 });
+
+exports.getTransactionByUserId = asyncWrapper(async (req, res) => {
+  const user = req.user;
+
+  const transactions = await TransactionService.getTransactionByUserId(
+    user.userId
+  );
+
+  const transactionFormatted = await TransactionView.transactionViewAll(
+    transactions,
+    async (val) => {
+      return TransactionView.transactionViewOnce(val);
+    }
+  );
+
+  return res.status(200).json(transactionFormatted);
+});

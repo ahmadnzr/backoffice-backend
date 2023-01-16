@@ -33,3 +33,7 @@ exports.checkUserPin = async (pin, userId) => {
 exports.findTargetById = async (id) => {
   return TargetModel.findById(id);
 };
+
+exports.getTransactionByUserId = async (id) => {
+  return TransactionModel.find({ user_id: id });
+};

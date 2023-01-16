@@ -19,4 +19,10 @@ router.get(
   transferController.getTransactionById
 );
 
+router.get(
+  "/myTransaction",
+  checkAuth,
+  transferController.getTransactionByUserId
+);
+
 module.exports = router;
