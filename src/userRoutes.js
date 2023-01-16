@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const userController = require("./controllers/userController");
 const pinController = require("./controllers/pinController");
+const transferController = require("./controllers/transferController");
 const { checkAuth } = require("./middleware/checkAdminAuth");
 
 router.post("/otp_verification", userController.otpVerification);
@@ -10,5 +11,7 @@ router.put("/new_password", checkAuth, userController.updateUserPassword);
 
 router.post("/pin", checkAuth, pinController.createUserPin);
 router.put("/new_pin", checkAuth, pinController.updateUserPin);
+
+router.post("/transactions", checkAuth, transferController.createTransaction);
 
 module.exports = router;

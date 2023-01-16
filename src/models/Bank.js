@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const bankSchema = new Schema({
   _id: String,
   name: String,
-  countryId: String,
+  code: String,
+  country_id: String,
 });
 
 module.exports = mongoose.model("Bank", bankSchema);

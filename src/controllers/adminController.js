@@ -5,6 +5,8 @@ const { v4: uuidv4 } = require("uuid");
 const asyncWrapper = require("../middleware/asycnWrapper");
 const adminService = require("../services/adminService");
 const userService = require("../services/userService");
+const dummyService = require("../services/dummyService");
+
 const { createRandomUser } = require("../utils/createDataDummy");
 const { createUsersView, createUserDetailView } = require("../views/UserView");
 
@@ -196,4 +198,47 @@ exports.updateByUserId = asyncWrapper(async (req, res) => {
   return res.status(200).json({
     message: "user updated!",
   });
+});
+
+// dummy data
+exports.createBank = asyncWrapper(async (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    return res.status(400).json({ message: "bank name required" });
+  }
+  const bank = {
+    _id: uuidv4(),
+    country_id: "22680b2c-9d29-466d-bfd6-09c42a2aaddc",
+    name,
+  };
+
+  await dummyService.createBank(bank);
+  return res.status(201).json({ message: "bank created" });
+});
+
+exports.createCountry = asyncWrapper(async (req, res) => {
+  const { name, code } = req.body;
+  if (!name || !code) {
+    return res.status(400).json({ message: "country name and code required" });
+  }
+
+  await dummyService.createCountry({ _id: uuidv4(), name, code });
+  return res.status(201).json({ message: "country created" });
+});
+
+exports.createTarget = asyncWrapper(async (req, res) => {
+  const { name, norek, bank_id } = req.body;
+
+  if (!name || !norek || !bank_id) {
+    return res.status(400).json({ message: "required field" });
+  }
+
+  const target = {
+    _id: uuidv4(),
+    name,
+    norek,
+    bank_id,
+  };
+  await dummyService.createTarget(target);
+  return res.status(201).json({ message: "target created" });
 });

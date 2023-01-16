@@ -13,4 +13,9 @@ router.get("/users/:userId", checkAuth, adminController.getUserById);
 router.delete("/users/:userId", checkAuth, adminController.deleteByUserId);
 router.put("/users/:userId", checkAuth, adminController.updateByUserId);
 
+// dummy
+// router.post("/countries", checkAuth, adminController.createCountry);
+// router.post("/banks", checkAuth, adminController.createBank);
+// router.post("/targets", checkAuth, adminController.createTarget);
+
 module.exports = router;

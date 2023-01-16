@@ -9,7 +9,8 @@ const checkAuth = (req, res, next) => {
   try {
     const { authorization } = req.headers;
 
-    verifyToken(authorization);
+    const logged = verifyToken(authorization);
+    req.user = logged;
 
     next();
   } catch (error) {
