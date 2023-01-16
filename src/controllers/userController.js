@@ -109,12 +109,11 @@ exports.loginUser = asyncWrapper(async (req, res) => {
 });
 
 exports.updateUserPassword = asyncWrapper(async (req, res) => {
-  const { password } = req.body;
-  const { authorization } = req.headers;
+  const { password, email } = req.body;
 
-  const user = verifyToken(authorization);
+  const findUser = await userService.getUserByEmail(email);
 
-  if (!user) {
+  if (!findUser) {
     return res.status(404).json({
       message: "user not found",
     });
