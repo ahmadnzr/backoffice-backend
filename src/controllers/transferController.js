@@ -1,22 +1,18 @@
 const { v4: uuidv4 } = require("uuid");
 const { faker } = require("@faker-js/faker");
 
-const TargetModel = require("../models/Target");
-const BankModel = require("../models/Bank");
-const PinModel = require("../models/Pin");
-
 const TransactionService = require("../services/transactionService");
+const TransactionView = require("../views/TransactionView");
+
+const asyncWrapper = require("../middleware/asycnWrapper");
 
 exports.createTransaction = async (req, res) => {
   const { nominal, bank_code, no_rekening, pin } = req.body;
   const user = req.user;
 
-  const bank = await BankModel.findOne({ code: bank_code });
-  const target = await TargetModel.findOne({ norek: no_rekening });
-  const cPin = await PinModel.findOne({
-    pin: parseInt(pin),
-    userId: user.userId,
-  });
+  const bank = TransactionService.findBankByCode(bank_code);
+  const target = await TransactionService.findTargetByNorek(no_rekening);
+  const cPin = await TransactionService.checkUserPin(pin, user.userId);
 
   if (!nominal) {
     return res.status(400).json({ message: "nominal required" });
@@ -52,3 +48,21 @@ exports.createTransaction = async (req, res) => {
     data: { transaction_id: data._id },
   });
 };
+
+exports.getTransactionById = asyncWrapper(async (req, res) => {
+  const { transaction_id } = req.params;
+
+  const transaction = await TransactionService.getTransactionById(
+    transaction_id
+  );
+
+  if (!transaction_id || !transaction) {
+    return res.status(404).json({ message: "transaction not found" });
+  }
+
+  const trasactionView = await TransactionView.transactionViewOnce(transaction);
+
+  return res.status(200).json({
+    ...trasactionView,
+  });
+});

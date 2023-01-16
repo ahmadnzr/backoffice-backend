@@ -13,5 +13,10 @@ router.post("/pin", checkAuth, pinController.createUserPin);
 router.put("/new_pin", checkAuth, pinController.updateUserPin);
 
 router.post("/transactions", checkAuth, transferController.createTransaction);
+router.get(
+  "/transactions/:transaction_id",
+  checkAuth,
+  transferController.getTransactionById
+);
 
 module.exports = router;
