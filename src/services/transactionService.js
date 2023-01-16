@@ -37,3 +37,7 @@ exports.findTargetById = async (id) => {
 exports.getTransactionByUserId = async (id) => {
   return TransactionModel.find({ user_id: id });
 };
+
+exports.getTargetBankAndNorek = async (bank_id, norek) => {
+  return TargetModel.findOne({ bank_id, norek });
+};

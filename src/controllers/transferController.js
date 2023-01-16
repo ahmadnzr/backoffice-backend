@@ -84,3 +84,20 @@ exports.getTransactionByUserId = asyncWrapper(async (req, res) => {
 
   return res.status(200).json(transactionFormatted);
 });
+
+exports.getTargetName = asyncWrapper(async (req, res) => {
+  const { bank_code, no_rekening } = req.body;
+  const bank = await TransactionService.findBankByCode(bank_code);
+  const target = await TransactionService.getTargetBankAndNorek(
+    bank._id,
+    no_rekening
+  );
+
+  if (!bank || !target) {
+    return res.status(404).json({ message: "account not found" });
+  }
+
+  return res.status(200).json({
+    name: target.name,
+  });
+});
