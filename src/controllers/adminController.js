@@ -6,9 +6,11 @@ const asyncWrapper = require("../middleware/asycnWrapper");
 const adminService = require("../services/adminService");
 const userService = require("../services/userService");
 const dummyService = require("../services/dummyService");
+const transactionService = require("../services/transactionService");
 
 const { createRandomUser } = require("../utils/createDataDummy");
 const { createUsersView, createUserDetailView } = require("../views/UserView");
+const TransactionView = require("../views/TransactionView");
 
 const TOKEN_AGE = 60 * 60 * 24 * 5; // 5 day
 
@@ -216,6 +218,45 @@ exports.updateByUserId = asyncWrapper(async (req, res) => {
   return res.status(200).json({
     message: "user updated!",
   });
+});
+
+exports.getAllTransaction = asyncWrapper(async (req, res) => {
+  const transactions = await transactionService.getAllTransaction();
+
+  const transactionFormatted = await TransactionView.transactionViewAll(
+    transactions,
+    async (val) => {
+      return TransactionView.transactionViewOnce(val);
+    }
+  );
+
+  return res.status(200).json(transactionFormatted);
+});
+
+exports.updateTransactionStatus = asyncWrapper(async (req, res) => {
+  const { status } = req.body;
+  const { transaction_id } = req.params;
+
+  if (!status) {
+    return res
+      .status(400)
+      .json({ status: "failed", message: "status required" });
+  }
+
+  const transaction = await transactionService.updateTransactionStatus(
+    transaction_id,
+    status
+  );
+
+  if (!transaction) {
+    return res
+      .status(404)
+      .json({ status: "failed", message: "transaction not found" });
+  }
+
+  return res
+    .status(200)
+    .json({ status: "success", message: "transaction updated" });
 });
 
 // dummy data

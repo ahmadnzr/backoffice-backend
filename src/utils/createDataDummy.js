@@ -25,7 +25,7 @@ exports.createRandomUser = () => {
     birth_date: sevenYago,
     sex,
     password: faker.internet.password() + "#",
-    address: `${faker.address.street()}, ${faker.address.streetName()}`,
+    address: `${faker.address.street()}, No.${faker.address.buildingNumber()}, ${faker.address.city()} (${faker.address.zipCodeByState()})`,
     phone_number: faker.phone.number("8###########"),
   };
 

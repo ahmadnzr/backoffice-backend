@@ -31,13 +31,21 @@ exports.checkUserPin = async (pin, userId) => {
 };
 
 exports.findTargetById = async (id) => {
-  return TargetModel.findById(id);
+  return await TargetModel.findById(id);
 };
 
 exports.getTransactionByUserId = async (id) => {
-  return TransactionModel.find({ user_id: id });
+  return await TransactionModel.find({ user_id: id });
 };
 
 exports.getTargetBankAndNorek = async (bank_id, norek) => {
-  return TargetModel.findOne({ bank_id, norek });
+  return await TargetModel.findOne({ bank_id, norek });
+};
+
+exports.getAllTransaction = async () => {
+  return await TransactionModel.find();
+};
+
+exports.updateTransactionStatus = async (id, status) => {
+  return await TransactionModel.findOneAndUpdate({ _id: id }, { status });
 };

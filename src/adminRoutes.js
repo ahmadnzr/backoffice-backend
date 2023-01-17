@@ -13,6 +13,13 @@ router.get("/users/:userId", checkAuth, adminController.getUserById);
 router.delete("/users/:userId", checkAuth, adminController.deleteByUserId);
 router.put("/users/:userId", checkAuth, adminController.updateByUserId);
 
+router.get("/transactions", checkAuth, adminController.getAllTransaction);
+router.put(
+  "/transactions/:transaction_id",
+  checkAuth,
+  adminController.updateTransactionStatus
+);
+
 // dummy
 // router.post("/countries", checkAuth, adminController.createCountry);
 // router.post("/banks", checkAuth, adminController.createBank);
