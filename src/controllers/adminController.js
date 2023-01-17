@@ -69,10 +69,18 @@ exports.createUser = asyncWrapper(async (req, res) => {
     });
   }
 
-  const existUser = await userService.getUserByEmail(email);
-  if (existUser) {
+  const existEmail = await userService.getUserByEmail(email);
+  const existPhone = await userService.getUserByPhone(phone_number);
+
+  if (existEmail) {
     return res.status(400).json({
       message: "email already registered!",
+    });
+  }
+
+  if (existPhone) {
+    return res.status(400).json({
+      message: "phone already registered!",
     });
   }
 
@@ -88,7 +96,7 @@ exports.createUser = asyncWrapper(async (req, res) => {
     sex: sex.toLowerCase(),
     password,
     address,
-    phone_number: { code: "ID", value: phone_number },
+    phone_number,
   };
 
   await userService.createUser(user);
@@ -173,14 +181,23 @@ exports.updateByUserId = asyncWrapper(async (req, res) => {
     });
   }
 
-  const existUser = await userService.getUserByEmail(email);
-  if (existUser._id !== userId) {
+  const existEmail = await userService.getUserByEmail(email);
+  const existPhone = await userService.getUserByPhone(phone_number);
+
+  if (existEmail) {
     return res.status(400).json({
       message: "email already registered!",
     });
   }
 
+  if (existPhone) {
+    return res.status(400).json({
+      message: "phone already registered!",
+    });
+  }
+
   const updatedUser = {
+    _id: uuidv4(),
     email,
     doc_type: doc_type.toLowerCase(),
     doc_number,
@@ -191,8 +208,9 @@ exports.updateByUserId = asyncWrapper(async (req, res) => {
     sex: sex.toLowerCase(),
     password,
     address,
-    phone_number: { code: "ID", value: phone_number },
+    phone_number,
   };
+
   await userService.updateByUserId(updatedUser, userId);
 
   return res.status(200).json({

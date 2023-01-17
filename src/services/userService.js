@@ -16,6 +16,10 @@ exports.getUserByEmail = async (email) => {
   return await UserModel.findOne({ email });
 };
 
+exports.getUserByPhone = async (phone) => {
+  return await UserModel.findOne({ phone_number: phone });
+};
+
 exports.getUserByName = async (name) => {
   return await UserModel.find({
     $or: [

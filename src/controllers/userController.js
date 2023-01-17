@@ -47,10 +47,18 @@ exports.createUser = asyncWrapper(async (req, res) => {
     });
   }
 
-  const existUser = await userService.getUserByEmail(email);
-  if (existUser) {
+  const existEmail = await userService.getUserByEmail(email);
+  const existPhone = await userService.getUserByPhone(phone_number);
+
+  if (existEmail) {
     return res.status(400).json({
       message: "email already registered!",
+    });
+  }
+
+  if (existPhone) {
+    return res.status(400).json({
+      message: "phone already registered!",
     });
   }
 
@@ -62,11 +70,11 @@ exports.createUser = asyncWrapper(async (req, res) => {
     firstname,
     lastname,
     birth_place,
-    birth_date: dayjs(birth_date).format("DD/MM/YYYY"),
+    birth_date,
     sex: sex.toLowerCase(),
     password,
     address,
-    phone_number: { code: "ID", value: phone_number },
+    phone_number,
   };
 
   await userService.createUser(user);

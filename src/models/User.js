@@ -14,7 +14,7 @@ const userSchema = new Schema({
   address: String,
   sex: String,
   password: String,
-  phone_number: { code: String, value: Number },
+  phone_number: String,
   verified_email: { type: Boolean, default: false },
   created_at: { type: Date, default: new Date() },
 });

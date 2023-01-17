@@ -31,7 +31,7 @@ const createUserDetailView = (user) => {
     id: _id,
     firstname,
     lastname,
-    phone_number: phone_number.value,
+    phone_number,
     email,
     doc_type,
     doc_number,
