@@ -125,7 +125,7 @@ exports.updateUserPassword = asyncWrapper(async (req, res) => {
     });
   }
 
-  await userService.updateUserPassword(password, user.userId);
+  await userService.updateUserPassword(password, findUser.userId);
   return res.status(200).json({
     status: "succes",
     message: "password updated!",
