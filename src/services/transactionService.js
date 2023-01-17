@@ -43,9 +43,16 @@ exports.getTargetBankAndNorek = async (bank_id, norek) => {
 };
 
 exports.getAllTransaction = async () => {
-  return await TransactionModel.find();
+  return await TransactionModel.find().sort({ created_at: "desc" });
+};
+
+exports.getNewTransaction = async () => {
+  return await TransactionModel.find().sort({ created_at: "desc" }).limit(5);
 };
 
 exports.updateTransactionStatus = async (id, status) => {
-  return await TransactionModel.findOneAndUpdate({ _id: id }, { status });
+  return await TransactionModel.findOneAndUpdate(
+    { _id: id },
+    { status, updated_at: new Date() }
+  );
 };

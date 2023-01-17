@@ -259,6 +259,81 @@ exports.updateTransactionStatus = asyncWrapper(async (req, res) => {
     .json({ status: "success", message: "transaction updated" });
 });
 
+exports.getSummary = asyncWrapper(async (req, res) => {
+  const users = await userService.getAllUser();
+  const transactions = await transactionService.getAllTransaction();
+
+  const total_users = users.length;
+  const user_male = users.filter(
+    (user) => user.sex.toLowerCase() === "male"
+  ).length;
+  const user_female = users.filter(
+    (user) => user.sex.toLowerCase() === "female"
+  ).length;
+
+  const what = users.filter(
+    (user) =>
+      user.sex.toLowerCase() !== "male" && user.sex.toLowerCase() !== "female"
+  );
+
+  const last_transactions = await transactionService.getNewTransaction();
+  const transactionFormatted = await TransactionView.transactionViewAll(
+    last_transactions,
+    async (val) => {
+      return TransactionView.transactionViewOnce(val);
+    }
+  );
+
+  const TransactionThisYear = transactions.filter((transaction) => {
+    const year = new Date(transaction.created_at).getFullYear();
+    return year == new Date().getFullYear();
+  });
+
+  // const perYear = [...new Set(year)];
+  const yearAverage = TransactionThisYear.length / 1;
+  const monthAverage = TransactionThisYear.length / 12;
+  const weekAverage = TransactionThisYear.length / 48;
+  const dayAverage = TransactionThisYear.length / 360;
+
+  let date = dayjs().startOf("year");
+  let monthGroup = {};
+
+  for (let i = 0; i < 12; i++) {
+    monthGroup[date.format("MMMM")] = 0;
+    date = date.add(1, "month");
+  }
+
+  const applicationUsage = users.map((user) =>
+    dayjs(user.created_at).format("MMMM")
+  );
+
+  applicationUsage.forEach((item) => {
+    let month = item;
+    if (!monthGroup[month]) {
+      monthGroup[month] = 0;
+    }
+
+    monthGroup[month]++;
+  });
+
+  return res.status(200).json({
+    applicationUsage: monthGroup,
+    total_users: {
+      total: total_users,
+      male: user_male,
+      female: user_female,
+      what,
+    },
+    transactions_average: {
+      perYear: Math.floor(yearAverage),
+      perMonth: Math.floor(monthAverage),
+      perWeek: Math.floor(weekAverage),
+      perDay: Math.floor(dayAverage),
+    },
+    last_transactions: transactionFormatted,
+  });
+});
+
 // dummy data
 exports.createBank = asyncWrapper(async (req, res) => {
   const { name } = req.body;

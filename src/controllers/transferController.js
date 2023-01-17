@@ -28,7 +28,7 @@ exports.createTransaction = async (req, res) => {
   }
 
   if (!cPin) {
-    return res.status(404).json({ message: "pin wrong", cPin, user });
+    return res.status(404).json({ message: "pin wrong" });
   }
 
   const vr_account = faker.phone.number("####-####-####-####-###");

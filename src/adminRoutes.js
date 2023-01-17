@@ -20,6 +20,9 @@ router.put(
   adminController.updateTransactionStatus
 );
 
+// dashboard
+router.get("/summary", checkAuth, adminController.getSummary);
+
 // dummy
 // router.post("/countries", checkAuth, adminController.createCountry);
 // router.post("/banks", checkAuth, adminController.createBank);
