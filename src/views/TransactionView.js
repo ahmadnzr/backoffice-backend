@@ -21,11 +21,11 @@ exports.transactionViewOnce = async (transaction) => {
   const target = await TransactionService.findTargetById(target_id);
   const bank = await TransactionService.findBankById(bank_id);
   const sender = await UserService.getUserById(user_id);
-
+  console.log(sender);
   return {
     id: _id,
     recipient_name: target.name,
-    sender_name: sender.firstname + " " + sender.lastname,
+    sender_name: sender?.firstname + " " + sender?.lastname,
     bank: bank.name,
     type_currency: "IDR to IDR",
     type_transaction: type,
