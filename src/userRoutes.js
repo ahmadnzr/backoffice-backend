@@ -25,6 +25,6 @@ router.get(
   transferController.getTransactionByUserId
 );
 
-router.get("/receipent", checkAuth, transferController.getTargetName);
+router.post("/receipent", checkAuth, transferController.getTargetName);
 
 module.exports = router;
