@@ -26,7 +26,7 @@ router.get(
   transferController.getTransactionByUserId
 );
 
-router.get("/receipent", checkAuth, transferController.getTargetName);
+router.get("/receipent", transferController.getTargetName);
 
 router.get("/bank", checkAuth, transferController.getAllBank);
 
