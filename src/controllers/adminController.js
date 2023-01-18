@@ -305,11 +305,9 @@ exports.getSummary = asyncWrapper(async (req, res) => {
     date = date.add(1, "month");
   }
 
-  const applicationUsage = users.map((user) =>
-    dayjs(user.created_at).format("MMMM")
-  );
+  const months = users.map((user) => dayjs(user.created_at).format("MMMM"));
 
-  applicationUsage.forEach((item) => {
+  months.forEach((item) => {
     let month = item;
     if (!monthGroup[month]) {
       monthGroup[month] = 0;
@@ -318,8 +316,12 @@ exports.getSummary = asyncWrapper(async (req, res) => {
     monthGroup[month]++;
   });
 
+  const applicationUsage = Object.keys(monthGroup).map((month) => {
+    return { name: month, value: monthGroup[month] };
+  });
+
   return res.status(200).json({
-    applicationUsage: monthGroup,
+    applicationUsage,
     total_users: {
       total: total_users,
       male: user_male,

@@ -21,7 +21,6 @@ exports.transactionViewOnce = async (transaction) => {
   const target = await TransactionService.findTargetById(target_id);
   const bank = await TransactionService.findBankById(bank_id);
   const sender = await UserService.getUserById(user_id);
-  console.log(sender);
   return {
     id: _id,
     recipient_name: target.name,
