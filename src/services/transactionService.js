@@ -56,3 +56,11 @@ exports.updateTransactionStatus = async (id, status) => {
     { status, updated_at: new Date() }
   );
 };
+
+exports.getAllBank = async () => {
+  return await BankModel.find();
+};
+
+exports.getTargetByBank = async (bank_id) => {
+  return await TargetModel.find({ bank_id });
+};

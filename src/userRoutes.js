@@ -3,6 +3,7 @@ const userController = require("./controllers/userController");
 const pinController = require("./controllers/pinController");
 const transferController = require("./controllers/transferController");
 const { checkAuth } = require("./middleware/checkAdminAuth");
+const BankModel = require("../src/models/Bank");
 
 router.post("/otp_verification", userController.otpVerification);
 router.post("/register", userController.createUser);
@@ -26,5 +27,7 @@ router.get(
 );
 
 router.get("/receipent", checkAuth, transferController.getTargetName);
+
+router.get("/bank", checkAuth, transferController.getAllBank);
 
 module.exports = router;

@@ -101,3 +101,9 @@ exports.getTargetName = asyncWrapper(async (req, res) => {
     name: target.name,
   });
 });
+
+exports.getAllBank = asyncWrapper(async (req, res) => {
+  const bank = await TransactionService.getAllBank();
+
+  return res.status(200).json(bank);
+});
