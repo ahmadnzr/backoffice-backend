@@ -96,6 +96,13 @@ exports.loginUser = asyncWrapper(async (req, res) => {
     });
   }
 
+  if (user.is_disabled === true) {
+    return res.status(400).json({
+      status: "failed to login",
+      message: "user blocked, please contact admin",
+    });
+  }
+
   const userPin = await pinService.findPinWithUserId(user._id);
 
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {

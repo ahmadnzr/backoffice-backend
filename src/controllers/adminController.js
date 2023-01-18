@@ -118,7 +118,9 @@ exports.getAllUser = asyncWrapper(async (req, res) => {
   }
 
   const users = await userService.getAllUser();
-  const usersView = users.map((user) => createUsersView(user));
+  const usersView = users
+    .filter((user) => user.is_disabled === false)
+    .map((user) => createUsersView(user));
 
   return res.status(200).json({ users: usersView });
 });
@@ -149,7 +151,7 @@ exports.deleteByUserId = asyncWrapper(async (req, res) => {
   await userService.deleteByUserId(userId);
 
   return res.status(200).json({
-    message: "user deleted!",
+    message: "user disabled!",
   });
 });
 

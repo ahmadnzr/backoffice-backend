@@ -30,7 +30,7 @@ exports.getUserByName = async (name) => {
 };
 
 exports.deleteByUserId = async (userId) => {
-  return await UserModel.deleteOne({ _id: userId });
+  return await UserModel.updateOne({ _id: userId }, { is_disabled: true });
 };
 
 exports.updateByUserId = async (user, userId) => {
