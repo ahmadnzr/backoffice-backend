@@ -28,6 +28,6 @@ router.get(
 
 router.get("/receipent", transferController.getTargetName);
 
-router.get("/bank", checkAuth, transferController.getAllBank);
+router.get("/bank", transferController.getAllBank);
 
 module.exports = router;
