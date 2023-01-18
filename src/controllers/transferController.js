@@ -89,7 +89,7 @@ exports.getTargetName = asyncWrapper(async (req, res) => {
   const { bank_code, no_rekening } = req.query;
   const bank = await TransactionService.findBankByCode(bank_code);
   const target = await TransactionService.getTargetBankAndNorek(
-    bank._id,
+    bank?._id,
     no_rekening
   );
 
