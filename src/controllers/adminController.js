@@ -265,11 +265,11 @@ exports.getSummary = asyncWrapper(async (req, res) => {
   const users = await userService.getAllUser();
   const transactions = await transactionService.getAllTransaction();
 
-  const total_users = users.length;
-  const user_male = users.filter(
+  const filteredUser = users.filter((user) => user.is_disabled === false);
+  const user_male = filteredUser.filter(
     (user) => user.sex.toLowerCase() === "male"
   ).length;
-  const user_female = users.filter(
+  const user_female = filteredUser.filter(
     (user) => user.sex.toLowerCase() === "female"
   ).length;
 
@@ -278,24 +278,40 @@ exports.getSummary = asyncWrapper(async (req, res) => {
       user.sex.toLowerCase() !== "male" && user.sex.toLowerCase() !== "female"
   );
 
-  const last_transactions = await transactionService.getNewTransaction();
+  const last_transactions = await transactionService.getAllTransaction();
   const transactionFormatted = await TransactionView.transactionViewAll(
-    last_transactions,
+    last_transactions.slice(0, 5),
     async (val) => {
       return TransactionView.transactionViewOnce(val);
     }
   );
 
   const TransactionThisYear = transactions.filter((transaction) => {
-    const year = new Date(transaction.created_at).getFullYear();
-    return year == new Date().getFullYear();
+    const year = dayjs(transaction.created_at).year();
+    return year == dayjs().year();
+  });
+
+  const transactionToday = transactions.filter((transaction) => {
+    const day = dayjs(transaction.created_at).day();
+    return day == dayjs().day();
+  });
+
+  const transactionThisWeek = transactions.filter((transaction) => {
+    const date = dayjs(transaction.created_at).date();
+    const week = Math.floor((date - 1) / 7) + 1;
+    return week == Math.floor((dayjs().date() - 1) / 7) + 1;
+  });
+
+  const transactionThisMonth = transactions.filter((transaction) => {
+    const month = dayjs(transaction.created_at).month();
+    return month == dayjs().month();
   });
 
   // const perYear = [...new Set(year)];
-  const yearAverage = TransactionThisYear.length / 1;
-  const monthAverage = TransactionThisYear.length / 12;
-  const weekAverage = TransactionThisYear.length / 48;
-  const dayAverage = TransactionThisYear.length / 360;
+  // const yearAverage = TransactionThisYear.length / 1;
+  // const monthAverage = TransactionThisYear.length / 12;
+  // const weekAverage = TransactionThisYear.length / 48;
+  // const dayAverage = TransactionThisYear.length / 360;
 
   let date = dayjs().startOf("year");
   let monthGroup = {};
@@ -323,16 +339,16 @@ exports.getSummary = asyncWrapper(async (req, res) => {
   return res.status(200).json({
     applicationUsage,
     total_users: {
-      total: total_users,
+      total: filteredUser.length,
       male: user_male,
       female: user_female,
       what,
     },
     transactions_average: {
-      perYear: Math.floor(yearAverage),
-      perMonth: Math.floor(monthAverage),
-      perWeek: Math.floor(weekAverage),
-      perDay: Math.floor(dayAverage),
+      perYear: TransactionThisYear.length,
+      perMonth: transactionThisMonth.length,
+      perDay: transactionToday.length,
+      perWeek: transactionThisWeek.length,
     },
     last_transactions: transactionFormatted,
   });

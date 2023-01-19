@@ -46,10 +46,6 @@ exports.getAllTransaction = async () => {
   return await TransactionModel.find().sort({ created_at: "desc" });
 };
 
-exports.getNewTransaction = async () => {
-  return await TransactionModel.find().sort({ created_at: "desc" }).limit(5);
-};
-
 exports.updateTransactionStatus = async (id, status) => {
   return await TransactionModel.findOneAndUpdate(
     { _id: id },
