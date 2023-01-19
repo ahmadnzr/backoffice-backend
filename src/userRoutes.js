@@ -14,13 +14,13 @@ router.post("/pin", checkAuth, pinController.createUserPin);
 router.put("/new_pin", checkAuth, pinController.updateUserPin);
 
 router.post("/transactions", checkAuth, transferController.createTransaction);
-router.get(
+router.post(
   "/transactions/:transaction_id",
   checkAuth,
   transferController.getTransactionById
 );
-
-router.get(
+// case in react-native, token cannot to be set in header
+router.post(
   "/myTransaction",
   checkAuth,
   transferController.getTransactionByUserId
