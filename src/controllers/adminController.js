@@ -136,7 +136,7 @@ exports.getUserById = asyncWrapper(async (req, res) => {
   }
   const usersView = createUserDetailView(user);
 
-  return res.status(200).json({ user: usersView });
+  return res.status(200).json({ ...usersView });
 });
 
 exports.deleteByUserId = asyncWrapper(async (req, res) => {
