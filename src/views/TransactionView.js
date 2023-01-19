@@ -25,6 +25,7 @@ exports.transactionViewOnce = async (transaction) => {
     id: _id,
     recipient_name: target.name,
     sender_name: sender?.firstname + " " + sender?.lastname,
+    sender_email: sender?.email,
     bank: bank.name,
     type_currency: "IDR to IDR",
     type_transaction: type,
