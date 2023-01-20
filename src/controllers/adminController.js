@@ -352,6 +352,7 @@ exports.getSummary = asyncWrapper(async (req, res) => {
       perMonth: transactionThisMonth.length,
       perDay: transactionToday.length,
       perWeek: transactionThisWeek.length,
+      transactionToday,
     },
     last_transactions: transactionFormatted,
   });
