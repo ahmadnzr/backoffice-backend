@@ -295,8 +295,10 @@ exports.getSummary = asyncWrapper(async (req, res) => {
   });
 
   const transactionToday = transactions.filter((transaction) => {
-    const date = dayjs(transaction.created_at).date();
-    return date == dayjs().date();
+    const date = dayjs(transaction.created_at)
+      .set("timezone", "'timezone', 'Asia/Jakarta'")
+      .date();
+    return date == dayjs().set("timezone", "'timezone', 'Asia/Jakarta'").date();
   });
 
   const transactionThisWeek = transactions.filter((transaction) => {
