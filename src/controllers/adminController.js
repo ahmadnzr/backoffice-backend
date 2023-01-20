@@ -188,20 +188,23 @@ exports.updateByUserId = asyncWrapper(async (req, res) => {
   const existEmail = await userService.getUserByEmail(email);
   const existPhone = await userService.getUserByPhone(phone_number);
 
-  if (existEmail) {
+  if (existEmail && userId != existEmail._id) {
     return res.status(400).json({
       message: "email already registered!",
+      userId,
+      // existEmail,
     });
   }
 
-  if (existPhone) {
+  if (existPhone && userId != existPhone._id) {
     return res.status(400).json({
       message: "phone already registered!",
+      userId,
+      // existPhone,
     });
   }
 
   const updatedUser = {
-    _id: uuidv4(),
     email,
     doc_type: doc_type.toLowerCase(),
     doc_number,
