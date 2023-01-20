@@ -295,8 +295,8 @@ exports.getSummary = asyncWrapper(async (req, res) => {
   });
 
   const transactionToday = transactions.filter((transaction) => {
-    const day = dayjs(transaction.created_at).day();
-    return day == dayjs().day();
+    const date = dayjs(transaction.created_at).date();
+    return date == dayjs().date();
   });
 
   const transactionThisWeek = transactions.filter((transaction) => {
@@ -350,7 +350,7 @@ exports.getSummary = asyncWrapper(async (req, res) => {
     transactions_average: {
       perYear: TransactionThisYear.length,
       perMonth: transactionThisMonth.length,
-      perDay: transactionToday.length,
+      perDay: transactionToday,
       perWeek: transactionThisWeek.length,
     },
     last_transactions: transactionFormatted,
