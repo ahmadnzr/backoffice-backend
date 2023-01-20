@@ -268,11 +268,11 @@ exports.getSummary = asyncWrapper(async (req, res) => {
   const users = await userService.getAllUser();
   const transactions = await transactionService.getAllTransaction();
 
-  const filteredUser = users.filter((user) => user.is_disabled === false);
-  const user_male = filteredUser.filter(
+  // const filteredUser = users.filter((user) => user.is_disabled === false);
+  const user_male = users.filter(
     (user) => user.sex.toLowerCase() === "male"
   ).length;
-  const user_female = filteredUser.filter(
+  const user_female = users.filter(
     (user) => user.sex.toLowerCase() === "female"
   ).length;
 
