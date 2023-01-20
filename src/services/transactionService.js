@@ -35,7 +35,9 @@ exports.findTargetById = async (id) => {
 };
 
 exports.getTransactionByUserId = async (id) => {
-  return await TransactionModel.find({ user_id: id });
+  return await TransactionModel.find({ user_id: id }).sort({
+    created_at: "desc",
+  });
 };
 
 exports.getTargetBankAndNorek = async (bank_id, norek) => {
