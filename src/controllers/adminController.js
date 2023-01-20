@@ -342,7 +342,7 @@ exports.getSummary = asyncWrapper(async (req, res) => {
   return res.status(200).json({
     applicationUsage,
     total_users: {
-      total: filteredUser.length,
+      total: users.length,
       male: user_male,
       female: user_female,
       what,
