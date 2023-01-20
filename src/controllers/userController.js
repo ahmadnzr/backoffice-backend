@@ -41,6 +41,12 @@ exports.createUser = asyncWrapper(async (req, res) => {
     phone_number,
   } = req.body;
 
+  if (sex.toLowerCase() !== "male" || sex.toLowerCase() !== "female") {
+    return res.status(400).json({
+      message: "gender must be 'male' or 'female'",
+    });
+  }
+
   if (!email) {
     return res.status(400).json({
       message: "field required!",
