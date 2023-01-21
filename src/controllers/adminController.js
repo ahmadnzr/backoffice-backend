@@ -1,6 +1,8 @@
 const dayjs = require("dayjs");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
+const utc = require("dayjs/plugin/utc");
+dayjs.extend(utc);
 
 const asyncWrapper = require("../middleware/asycnWrapper");
 const adminService = require("../services/adminService");
@@ -226,7 +228,39 @@ exports.updateByUserId = asyncWrapper(async (req, res) => {
 });
 
 exports.getAllTransaction = asyncWrapper(async (req, res) => {
+  const { from, to, nominalStart = 0, nominalEnd = 1000000 } = req.query;
+  const start = dayjs
+    .utc(from)
+    .set("hour", 0)
+    .set("minute", 0)
+    .set("second", 0)
+    .toISOString();
+  const end = dayjs
+    .utc(to)
+    .set("hour", 23)
+    .set("minute", 59)
+    .set("second", 59)
+    .toISOString();
+
   const transactions = await transactionService.getAllTransaction();
+
+  if (from) {
+    const transactions = await transactionService.getFilteredTransaction(
+      start,
+      end,
+      nominalStart,
+      nominalEnd
+    );
+
+    const transactionFormatted = await TransactionView.transactionViewAll(
+      transactions,
+      async (val) => {
+        return TransactionView.transactionViewOnce(val);
+      }
+    );
+
+    return res.status(200).json(transactionFormatted);
+  }
 
   const transactionFormatted = await TransactionView.transactionViewAll(
     transactions,
@@ -290,26 +324,24 @@ exports.getSummary = asyncWrapper(async (req, res) => {
   );
 
   const TransactionThisYear = transactions.filter((transaction) => {
-    const year = dayjs(transaction.created_at).year();
-    return year == dayjs().year();
+    const year = dayjs.utc(transaction.created_at).year();
+    return year == dayjs.utc().year();
   });
 
   const transactionToday = transactions.filter((transaction) => {
-    const date = dayjs(transaction.created_at)
-      .set("timezone", "'timezone', 'Asia/Jakarta'")
-      .date();
-    return date == dayjs().set("timezone", "'timezone', 'Asia/Jakarta'").date();
+    const date = dayjs.utc(transaction.created_at).date();
+    return date == dayjs.utc().date();
   });
 
   const transactionThisWeek = transactions.filter((transaction) => {
-    const date = dayjs(transaction.created_at).date();
+    const date = dayjs.utc(transaction.created_at).date();
     const week = Math.floor((date - 1) / 7) + 1;
-    return week == Math.floor((dayjs().date() - 1) / 7) + 1;
+    return week == Math.floor((dayjs.utc().date() - 1) / 7) + 1;
   });
 
   const transactionThisMonth = transactions.filter((transaction) => {
-    const month = dayjs(transaction.created_at).month();
-    return month == dayjs().month();
+    const month = dayjs.utc(transaction.created_at).month();
+    return month == dayjs.utc().month();
   });
 
   // const perYear = [...new Set(year)];
@@ -318,7 +350,7 @@ exports.getSummary = asyncWrapper(async (req, res) => {
   // const weekAverage = TransactionThisYear.length / 48;
   // const dayAverage = TransactionThisYear.length / 360;
 
-  let date = dayjs().startOf("year");
+  let date = dayjs.utc().startOf("year");
   let monthGroup = {};
 
   for (let i = 0; i < 12; i++) {

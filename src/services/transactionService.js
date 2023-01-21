@@ -48,6 +48,24 @@ exports.getAllTransaction = async () => {
   return await TransactionModel.find().sort({ created_at: "desc" });
 };
 
+exports.getFilteredTransaction = async (
+  startDate,
+  endDate,
+  nominalStart,
+  nominalEnd
+) => {
+  if (!nominalStart) {
+    return await TransactionModel.find({
+      created_at: { $gte: startDate, $lt: endDate },
+    }).sort({ created_at: "desc" });
+  }
+
+  return await TransactionModel.find({
+    created_at: { $gte: startDate, $lt: endDate },
+    nominal: { $gte: nominalStart, $lt: nominalEnd },
+  }).sort({ created_at: "desc" });
+};
+
 exports.updateTransactionStatus = async (id, status) => {
   return await TransactionModel.findOneAndUpdate(
     { _id: id },
